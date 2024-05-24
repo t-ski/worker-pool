@@ -3,38 +3,33 @@ import { Worker as Thread, SHARE_ENV } from "worker_threads";
 import { IWorkerPoolOptions, WorkerPool } from "./WorkerPool";
 
 
-interface IThreadOptions {
-	workingDir?: string;
-	devMode?: boolean;
+export interface IThreadPoolOptions extends IWorkerPoolOptions {
+    threadOptions?: {
+        workingDir?: string;
+        devMode?: boolean;
+    };
 }
 
-interface IThreadPoolOptions extends IWorkerPoolOptions {
-	threadOptions: IThreadOptions;
-};
 
-
-export class ThreadPool<I, O, E> extends WorkerPool<Thread, I, O, E> {
-	private readonly threadOptions: IThreadOptions;
-
+export class ThreadPool<I, O, E> extends WorkerPool<Thread, IThreadPoolOptions, I, O, E> {
 	constructor(threadModulePath: string, options: IThreadPoolOptions) {
 		super(threadModulePath, options);
-
-		this.threadOptions = options.threadOptions ?? {};
 	}
 	
 	protected createWorker(): Promise<Thread> {
     	const thread = new Thread(this.workerModulePath, {
     		argv: process.argv.slice(2),
     		env: SHARE_ENV,
-			workerData: this.threadOptions
+			workerData: this.options.threadOptions
     	});
 		
 		thread.on("message", (output: O) => {
 			this.deactivateWorker(thread, output); 
 		});
-		/* thread.on("error", (potentialStatus: number|unknown) => {
+		thread.on("error", (err: E) => {
 			// TODO: Spin up new (?)
-		}); */
+			throw err;
+		});
         
     	return new Promise((resolve) => {
     		thread.once("online", () => resolve(thread));

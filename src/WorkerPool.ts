@@ -22,17 +22,18 @@ export interface IWorkerPoolOptions {
 	maxPending?: number;
 }
 
-export abstract class WorkerPool<Worker extends EventEmitter, I, O, E> extends EventEmitter {
-	private readonly options: IWorkerPoolOptions;
+
+export abstract class WorkerPool<Worker extends EventEmitter, IOptions extends IWorkerPoolOptions, I, O, E> extends EventEmitter {
 	private readonly activeWorkers: Map<Worker, IActiveWorker<O, E>> = new Map();
 	private readonly idleWorkers: Worker[] = [];
 	private readonly pendingAssignments: IPendingAssignment<I, O, E>[] = [];
 
+	protected readonly options: IOptions;
 	protected readonly workerModulePath: string;
 
 	public isOnline: boolean = false;
 
-	constructor(workerModulePath: string, options: IWorkerPoolOptions = {}) {
+	constructor(workerModulePath: string, options?: IOptions) {
 		super();
 
 		this.options = {
