@@ -1,0 +1,37 @@
+{
+    "name": "@t-ski/worker-pool",
+    "version": "0.1.0",
+    "description": "Worker pool API for pseudo or real concurrency.",
+    "author": "Thassilo Martin Schiepanski",
+	"homepage": "https://github.com/rapidjs.org/worker-pool#readme",
+    "keywords": [ "worker-pool", "concurrency" ],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rapidjs.org/worker-pool.git"
+	},
+	"bugs": {
+		"url": "https://github.com/rapidjs.org/worker-pool/issues"
+	},
+	"main": "./build/api.js",
+    "types": "./types/api.d.ts",
+    "files": [
+        "./build/",
+        "./types/"
+    ],
+    "scripts": {
+        "compile": "npx tsc --project ./tsconfig.debug.json",
+        "compile:watch": "npm run compile -- --watch",
+        "build": "rm -rf ./build/ && rm -rf ./types/ && npx tsc --project ./tsconfig.build.json",
+		"lint": "npx eslint --fix ./src/*.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.6",
+		"@eslint/js": "^9.2.0",
+		"@typescript-eslint/eslint-plugin": "^7.8.0",
+		"@typescript-eslint/parser": "^7.8.0",
+		"eslint": "^8.57.0",
+		"eslint-plugin-typescript": "^0.14.0",
+		"typescript-eslint": "^7.8.0",
+        "typescript": "^5.3.3"
+    }
+}
