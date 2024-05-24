@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import { cpus } from "os";
+import { resolve as resolvePath } from "path";
 
 
 interface IWorker<O, E> {
@@ -23,15 +24,13 @@ export interface IWorkerPoolOptions {
 }
 
 
-export abstract class WorkerPool<Worker extends EventEmitter, IOptions extends IWorkerPoolOptions, I, O, E> extends EventEmitter {
+export abstract class WorkerPool<Worker extends EventEmitter, I, O, E, IOptions extends IWorkerPoolOptions = IWorkerPoolOptions> extends EventEmitter {
 	private readonly activeWorkers: Map<Worker, IActiveWorker<O, E>> = new Map();
 	private readonly idleWorkers: Worker[] = [];
 	private readonly pendingAssignments: IPendingAssignment<I, O, E>[] = [];
 
 	protected readonly options: IOptions;
 	protected readonly workerModulePath: string;
-
-	public isOnline: boolean = false;
 
 	constructor(workerModulePath: string, options?: IOptions) {
 		super();
@@ -44,7 +43,7 @@ export abstract class WorkerPool<Worker extends EventEmitter, IOptions extends I
 			...options
 		};
 
-		this.workerModulePath = workerModulePath;
+		this.workerModulePath = resolvePath(workerModulePath);
 		
 		setImmediate(async () => {
 			for(let i = 0; i < this.options.baseSize; i++) {
@@ -54,8 +53,6 @@ export abstract class WorkerPool<Worker extends EventEmitter, IOptions extends I
 			}
 			
 			this.emit("online");
-
-			this.isOnline = true;
 		});
 	}
     

@@ -10,7 +10,7 @@ export interface IProcessPoolOptions extends IWorkerPoolOptions {
 }
 
 
-export class ProcessPool<I extends string|Buffer, O extends string|Buffer, E> extends WorkerPool<ChildProcess, IProcessPoolOptions, I, O, E> {
+export class ProcessPool<I extends string|Buffer, O extends string|Buffer, E> extends WorkerPool<ChildProcess, I, O, E, IProcessPoolOptions> {
 	constructor(childProcessModulePath: string, options: IProcessPoolOptions) {
 		super(childProcessModulePath, options);
 	}

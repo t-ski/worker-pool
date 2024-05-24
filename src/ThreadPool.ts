@@ -3,24 +3,15 @@ import { Worker as Thread, SHARE_ENV } from "worker_threads";
 import { IWorkerPoolOptions, WorkerPool } from "./WorkerPool";
 
 
-export interface IThreadPoolOptions extends IWorkerPoolOptions {
-    threadOptions?: {
-        workingDir?: string;
-        devMode?: boolean;
-    };
-}
-
-
-export class ThreadPool<I, O, E> extends WorkerPool<Thread, IThreadPoolOptions, I, O, E> {
-	constructor(threadModulePath: string, options: IThreadPoolOptions) {
+export class ThreadPool<I, O, E> extends WorkerPool<Thread, I, O, E> {
+	constructor(threadModulePath: string, options?: IWorkerPoolOptions) {
 		super(threadModulePath, options);
 	}
 	
 	protected createWorker(): Promise<Thread> {
     	const thread = new Thread(this.workerModulePath, {
     		argv: process.argv.slice(2),
-    		env: SHARE_ENV,
-			workerData: this.options.threadOptions
+    		env: SHARE_ENV
     	});
 		
 		thread.on("message", (output: O) => {
