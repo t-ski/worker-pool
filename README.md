@@ -1,7 +1,5 @@
 # Worker Pool
 
-## Abstract Class
-
 The abstract `WorkerPool` class allows to implement an arbitrary modular worker mechanism:
 
 ``` ts
