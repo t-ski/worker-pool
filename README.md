@@ -1,8 +1,8 @@
 # Worker Pool
 
-## WorkerPool
+## Abstract Class
 
-The abstract class `WorkerPool` allows to implement arbitrary worker modules:
+The abstract `WorkerPool` class allows to implement an arbitrary modular worker mechanism:
 
 ``` ts
 interface IWorkerPoolOptions {
@@ -25,10 +25,10 @@ abstract class WorkerPool<Worker extends EventEmitter, IOptions extends IWorkerP
 
 | Generic | Description |
 | :- | :- |
-| `Worker` | Worker class (will individually be activated) |
-| `I` | Worker input |
-| `O` | Worker output |
-| `E` | Worker error |
+| `Worker` | Worker class (instances to activate) |
+| `I` | Worker input type |
+| `O` | Worker output type |
+| `E` | Worker error type |
 
 ## ThreadPool
 
